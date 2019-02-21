@@ -1,0 +1,17 @@
+###
+GET 127.0.0.1:8000/ping
+Accept: application/json
+
+###
+GET 127.0.0.1:8000/register?devicetoken=4100b294676f89b4edf77018e8232cf2d45ee59dfb29d87af89b8f7b49dac536&key=9zyMyDD9d93yesbwJvEzgi
+Accept: application/json
+
+###
+GET 127.0.0.1:8000/register?devicetoken=
+Accept: application/json
+
+###
+GET 127.0.0.1:8000/9zyMyDD9d93yesbwJvEzgi/aaaa/bbbb
+Accept: application/json
+
+###
