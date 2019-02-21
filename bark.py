@@ -8,6 +8,7 @@ from apns2.errors import APNsException
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = BASE_DIR + '/db.sqlite'
+CERT_PATH = BASE_DIR + '/cert-20200229.pem'
 
 
 def push(category, title, body, device_token, params):
@@ -17,7 +18,7 @@ def push(category, title, body, device_token, params):
         sound='1107', badge=int(params['badge']) if 'badge' in params else 0,
         category=category, mutable_content=True, **params)
     topic = 'me.fin.bark'
-    client = APNsClient(BASE_DIR + '/cert-20200229.pem')
+    client = APNsClient(CERT_PATH)
 
     try:
         client.send_notification(device_token, payload, topic)
