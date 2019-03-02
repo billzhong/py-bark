@@ -7,8 +7,8 @@ from apns2.payload import Payload, PayloadAlert
 from apns2.errors import APNsException
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = BASE_DIR + '/db.sqlite'
-CERT_PATH = BASE_DIR + '/cert-20200229.pem'
+DB_PATH = os.path.join(BASE_DIR, 'db.sqlite')
+CERT_PATH = os.path.join(BASE_DIR, 'cert-20200229.pem')
 
 
 def push(category, title, body, device_token, params):
