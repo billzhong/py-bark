@@ -12,16 +12,13 @@ CERT_PATH = os.path.join(BASE_DIR, 'cert-20200229.pem')
 
 
 def push(category, title, body, device_token, params):
-    payload = Payload(PayloadAlert(
-        title=title,
-        body=body),
-        sound='1107', badge=int(params['badge']) if 'badge' in params else 0,
-        category=category, mutable_content=True, **params)
-    topic = 'me.fin.bark'
+    payload = Payload(alert=PayloadAlert(title=None if title == '' else title, body=body),
+                      sound='1107', badge=int(params['badge']) if 'badge' in params else 0,
+                      category=category, mutable_content=True, custom=params)
     client = APNsClient(CERT_PATH)
 
     try:
-        client.send_notification(device_token, payload, topic)
+        client.send_notification(device_token, payload, 'me.fin.bark')
         return ''
     except APNsException as e:
         return str(e)
@@ -104,18 +101,25 @@ class IndexResource(object):
         else:
             title = ''
 
-        if title == '':
-            title = req.media.get('title')
-
         if 'body' in kwargs:
             body = kwargs['body']
         else:
-            body = ''
+            body = title  # compatible with go version
+            title = ''
 
-        if title == '':
-            body = req.media.get('title')
+        if req.media:  # try get contents from request body
+            if title == '' and 'title' in req.media:
+                title = req.media.get('title')
 
-        error = push('myNotificationCategory', title, body, device_token, req.params)
+            if body == '' and 'body' in req.media:
+                body = req.media.get('body')
+
+        if body == '':
+            body = 'No notification message'
+
+        params = {k.lower(): v for k, v in req.params.items()}
+
+        error = push('myNotificationCategory', title, body, device_token, params)
 
         if error == '':
             resp.media = {
